@@ -1,10 +1,10 @@
 const loginForm = document.getElementById('loginForm');
 const usernameInput = document.getElementById('username');
-const password = document.getElementById('password');
-const signIn = document.getElementById('signIn');
+const passwordInput = document.getElementById('password');
+const signInBtn = document.getElementById('signIn');
 
 
-signIn.addEventListener('click', (event) =>{
+signInBtn.addEventListener('click', (event) =>{
     event.preventDefault();
     const username = usernameInput.value;
     const password = passwordInput.value;
