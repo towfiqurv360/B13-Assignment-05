@@ -46,7 +46,7 @@ const loadAllIssues = async ()=>{
             priorityText = "text-neutral/50";
         }
 
-        const cardStyle=`<div class="card bg-white shadow-lg ${BorderColor}">
+        const cardStyle=`<div onclick="openModal('${issue.id}')" class="card bg-white shadow-lg hover:shadow-xl transition-shadow cursor-pointer ${BorderColor}">
                 <div class="flex justify-between items-center px-4 pt-4">                
                         <img src="./assets/${statusIcon}" alt="">
                         <a href="" class="btn btn-xs rounded-full border-none font-bold ${priorityBg} ${priorityText}">${issue.priority}</a>
@@ -151,3 +151,89 @@ const performSearch = async () => {
         console.error("Search error:", error);
     }
 };
+
+
+const openModal = async (id) => {
+    const modal = document.getElementById('issue_modal');
+    const modalContent = document.getElementById('modal-content');
+ 
+    
+    modalContent.innerHTML = `
+        <div class="flex justify-center my-12">
+            <span class="loading loading-spinner loading-lg text-purple-600"></span>
+        </div>`;
+    modal.showModal();
+
+    try {
+        const res = await fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issue/${id}`);
+        const data = await res.json();
+        const issue = data.data;
+
+        let formattedDate = issue.createdAt;
+        try {
+            const dateObj = new Date(issue.createdAt);
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const year = dateObj.getFullYear();
+            formattedDate = `${day}/${month}/${year}`;
+        } catch (e) {}
+
+        const statusBg = issue.status === 'open' ? 'bg-[#00C271]' : 'bg-purple-600';
+        const statusText = issue.status === 'open' ? 'Opened' : 'Closed';
+
+        
+        let priorityBgModal = "bg-green-500";
+        if (issue.priority.toLowerCase() === 'high') priorityBgModal = "bg-red-500";
+        if (issue.priority.toLowerCase() === 'medium') priorityBgModal = "bg-yellow-500";
+
+        modalContent.innerHTML = `
+            <h2 class="text-3xl font-bold text-gray-900">${issue.title}</h2>
+            
+            <div class="flex flex-wrap items-center gap-2 mt-4 text-sm text-[#64748B] font-medium">
+                <span class="${statusBg} text-white px-4 py-[2px] rounded-full text-xs font-semibold capitalize">${statusText}</span>
+                <span>•</span>
+                <span>Opened by <span class="text-gray-800">${issue.author}</span></span>
+                <span>•</span>
+                <span>${formattedDate}</span>
+            </div>
+
+            <div class="flex gap-2 mt-6">
+                ${issue.labels ? issue.labels.map(label => {
+                    if(label.toLowerCase() === 'bug'){
+                        return `<span class="px-3 py-1 bg-red-50 text-red-500 border border-red-200 rounded-full text-xs font-bold uppercase flex items-center gap-1"><svg width="9" height="11" viewBox="0 0 9 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.56328 1.48363L8.08547 0.961913C8.13779 0.90959 8.1793 0.847473 8.20762 0.779109C8.23593 0.710745 8.25051 0.637472 8.25051 0.563476C8.25051 0.489479 8.23593 0.416207 8.20762 0.347843C8.1793 0.279479 8.13779 0.217362 8.08547 0.165038C8.03315 0.112715 7.97103 0.0712093 7.90267 0.042892C7.8343 0.0145747 7.76103 -9.54911e-10 7.68703 0C7.61304 9.54911e-10 7.53976 0.0145747 7.4714 0.042892C7.40304 0.0712093 7.34092 0.112715 7.2886 0.165038L6.71906 0.736913C6.00803 0.257538 5.17004 0.00143445 4.3125 0.00143445C3.45497 0.00143445 2.61697 0.257538 1.90594 0.736913L1.33547 0.165976C1.2298 0.0603035 1.08648 0.000937521 0.937033 0.000937521C0.78759 0.000937521 0.644268 0.0603035 0.538596 0.165976C0.432923 0.271648 0.373557 0.41497 0.373557 0.564413C0.373557 0.713856 0.432923 0.857178 0.538596 0.962851L1.06172 1.48363C0.37636 2.26714 -0.000957759 3.27298 1.8258e-06 4.31394V6.18894C1.8258e-06 7.33269 0.454353 8.42959 1.2631 9.23834C2.07185 10.0471 3.16876 10.5014 4.3125 10.5014C5.45625 10.5014 6.55315 10.0471 7.3619 9.23834C8.17065 8.42959 8.625 7.33269 8.625 6.18894V4.31394C8.62596 3.27298 8.24864 2.26714 7.56328 1.48363ZM7.5 4.31394V4.50144H1.125V4.31394C1.125 3.46857 1.46083 2.65781 2.0586 2.06004C2.65637 1.46227 3.46712 1.12644 4.3125 1.12644C5.15788 1.12644 5.96863 1.46227 6.56641 2.06004C7.16418 2.65781 7.5 3.46857 7.5 4.31394ZM4.3125 9.37644C3.46739 9.37558 2.65714 9.03947 2.05956 8.44189C1.46197 7.8443 1.12587 7.03406 1.125 6.18894V5.62644H7.5V6.18894C7.49913 7.03406 7.16303 7.8443 6.56545 8.44189C5.96786 9.03947 5.15761 9.37558 4.3125 9.37644ZM4.875 3.18894C4.875 3.04061 4.91899 2.8956 5.0014 2.77227C5.08381 2.64893 5.20094 2.5528 5.33799 2.49603C5.47503 2.43927 5.62583 2.42442 5.77132 2.45336C5.91681 2.48229 6.05044 2.55373 6.15533 2.65861C6.26022 2.7635 6.33165 2.89714 6.36059 3.04263C6.38953 3.18811 6.37468 3.33891 6.31791 3.47596C6.26115 3.613 6.16502 3.73014 6.04168 3.81255C5.91834 3.89496 5.77334 3.93894 5.625 3.93894C5.42609 3.93894 5.23532 3.85993 5.09467 3.71927C4.95402 3.57862 4.875 3.38786 4.875 3.18894ZM2.25 3.18894C2.25 3.04061 2.29399 2.8956 2.3764 2.77227C2.45881 2.64893 2.57594 2.5528 2.71299 2.49603C2.85003 2.43927 3.00083 2.42442 3.14632 2.45336C3.29181 2.48229 3.42544 2.55373 3.53033 2.65861C3.63522 2.7635 3.70665 2.89714 3.73559 3.04263C3.76453 3.18811 3.74968 3.33891 3.69291 3.47596C3.63615 3.613 3.54002 3.73014 3.41668 3.81255C3.29334 3.89496 3.14834 3.93894 3 3.93894C2.80109 3.93894 2.61032 3.85993 2.46967 3.71927C2.32902 3.57862 2.25 3.38786 2.25 3.18894Z" fill="#D97706"/></svg> Help Wanted</span>`;
+                    }
+                }).join('') : ''}
+            </div>
+
+            <p class="py-6 text-[#64748B] text-base leading-relaxed">
+                ${issue.description}
+            </p>
+
+            <div class="bg-[#F8FAFC] rounded-xl p-6 flex flex-col sm:flex-row justify-between sm:items-center border border-gray-100 mt-4">
+                <div>
+                    <p class="text-[#64748B] text-sm mb-1">Assignee:</p>
+                    <p class="text-lg font-bold text-gray-900">${issue.author}</p>
+                </div>
+                <div class="mt-4 sm:mt-0">
+                    <p class="text-[#64748B] text-sm mb-1">Priority:</p>
+                    <span class="${priorityBgModal} text-white px-5 py-1.5 rounded-full text-xs font-bold uppercase inline-block">${issue.priority}</span>
+                </div>
+            </div>
+
+            <div class="modal-action mt-8 justify-end">
+                <form method="dialog">
+                    <button class="btn bg-violet-600 hover:bg-violet-700 text-white border-none px-10 rounded-lg text-base font-semibold">Close</button>
+                </form>
+            </div>
+        `;
+    } catch (error) {
+        modalContent.innerHTML = `
+            <div class="text-center py-8">
+                <p class="text-red-500 mb-4 font-semibold text-lg">Failed to load issue details!</p>
+                <form method="dialog">
+                    <button class="btn bg-red-500 text-white border-none">Close</button>
+                </form>
+            </div>`;
+    }
+};
+
