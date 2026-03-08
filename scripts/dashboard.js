@@ -16,7 +16,7 @@ const loadAllIssues = async ()=>{
         issueCountElement.innerText = `${issues.length} Issues`;
 
     issues.forEach(issue => {
-        console.log(issue);
+        // console.log(issue);
         let BorderColor="";
         let statusIcon = "";
         if (issue.status === "open" ){
@@ -28,7 +28,7 @@ const loadAllIssues = async ()=>{
             statusIcon = "Closed-Status.png"
         }
 
-        let priorityBG = "";
+        let priorityBg = "";
         let priorityText = "";
 
         if(issue.priority === 'high'){
@@ -117,3 +117,37 @@ Closebtn.addEventListener('click', (event)=>{
 });
 setActiveButton(Allbtn);
 
+
+const searchInput = document.getElementById('searchInput');
+const searchBtn = document.getElementById('searchBtn');
+
+
+searchInput.addEventListener('keypress', async (event) => {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        performSearch();
+    }
+});
+
+
+searchBtn.addEventListener('click', () => {
+    performSearch();
+});
+
+const performSearch = async () => {
+    const searchText = searchInput.value.trim();
+
+    if (searchText === "") {
+        displayIssues(allIssuesData);
+        return;
+    }
+
+    try {
+        const response = await fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=${searchText}`);
+        const data = await response.json();
+        console.log("Search API Response:", data);
+        displayIssues(data.data);
+    } catch (error) {
+        console.error("Search error:", error);
+    }
+};
