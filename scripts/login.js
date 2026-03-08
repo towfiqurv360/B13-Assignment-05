@@ -8,12 +8,16 @@ SignIn.addEventListener('click', (event) =>{
     event.preventDefault();
     const username = Username.value;
     const password = Password.value;
-    if(username !== "admin" || password !== "admin123"){
-        alert("Invalid Username");
+    if(username !== "admin" ){
+        alert("Invalid Username!");
+        return;
+    }
+    else if(password !== "admin123"){
+        alert("Invalid Password!");
         return;
     }
     else{
-        alert("Login SuccessFull!")
+        // alert("Login SuccessFull!")
         return window.location.href = 'dashboard.html';
     } 
     
