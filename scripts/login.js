@@ -1,13 +1,13 @@
-const LoginForm = document.getElementById('loginForm');
-const Username = document.getElementById('username');
-const Password = document.getElementById('password');
-const SignIn = document.getElementById('signIn');
+const loginForm = document.getElementById('loginForm');
+const usernameInput = document.getElementById('username');
+const password = document.getElementById('password');
+const signIn = document.getElementById('signIn');
 
 
-SignIn.addEventListener('click', (event) =>{
+signIn.addEventListener('click', (event) =>{
     event.preventDefault();
-    const username = Username.value;
-    const password = Password.value;
+    const username = usernameInput.value;
+    const password = passwordInput.value;
     if(username !== "admin" ){
         alert("Invalid Username!");
         return;
