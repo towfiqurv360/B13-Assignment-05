@@ -64,3 +64,22 @@ loadAllIssues();
 const Allbtn=document.getElementById('btn-all');
 const Openbtn=document.getElementById('btn-open');
 const Closebtn=document.getElementById('btn-closed');
+
+Allbtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    displayIssues(allIssuesData);
+});
+
+Openbtn.addEventListener('click', (event)=>{
+    event.preventDefault();
+
+    const openIssues = allIssuesData.filter(issue => issue.status=== "open");
+    displayIssues(openIssues);
+});
+Closebtn.addEventListener('click', (event)=>{
+    event.preventDefault();
+
+    const closeIssues = allIssuesData.filter(issue=> issue.status ==="closed");
+
+    displayIssues(closeIssues);
+});
