@@ -1,12 +1,18 @@
+let allIssuesData = [];
+
+
 const loadAllIssues = async ()=>{
     const response = await fetch('https://phi-lab-server.vercel.app/api/v1/lab/issues');
     const data =await response.json();
-    console.log(data);
-
+    allIssuesData=data.data;
+    displayIssues(allIssuesData);
+    // console.log(data);
+ };
+    const displayIssues = (issues) => {
     const Cards = document.getElementById('card');
     Cards.innerHTML="";
 
-    data.data.forEach( issue=> {
+    issues.forEach(issue => {
         console.log(issue);
         let BorderColor="";
         let statusIcon = "";
@@ -48,7 +54,13 @@ const loadAllIssues = async ()=>{
         `
 
         Cards.innerHTML += cardStyle;
+
+
     });
 };
 loadAllIssues();
 
+
+const Allbtn=document.getElementById('btn-all');
+const Openbtn=document.getElementById('btn-open');
+const Closebtn=document.getElementById('btn-closed');
