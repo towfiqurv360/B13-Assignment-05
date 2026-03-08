@@ -3,9 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Sign In</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <style>
+        *{
+            font-family: "Geist", sans-serif;
+            font-optical-sizing: auto;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
+
+
+    </style>
 </head>
-<body>
-    <H1>Hello World!</H1>
+<body class="min-h-screen max-w-md mx-auto">
+    <div class="card bg-white w-full max-w-sm shrink-0 shadow-xl mx-auto rounded-2xl my-12"> 
+        <div class="mx-auto flex flex-col justify-center text-center items-center p-8">
+            <img src="./assets/github-logo.png" alt="">
+            <h2 class="text-2xl font-semibold pt-6">GitHub Issues Tracker</h2>
+            <p class="text-neutral/50">Sign in to manage your issues</p>
+        </div>
+        <div class="mx-8">
+            <fieldset class="fieldset" id="loginForm">
+
+                <label class="label text-black font-medium text-sm">Username</label>
+                <input type="text" id="username" class="input focus:outline-none" placeholder="Enter Username" required />
+                <p class="text-violet-600 font-medium">Default: admin</p>
+
+                <label class="label text-black font-medium text-sm">Password</label>
+                <input type="password" id="password" class="input focus:outline-none" placeholder="Enter Password" required />
+                <p class="text-violet-600 font-medium">Default: admin123</p>
+
+                <button class="btn btn-primary mt-4" id="signIn">Sign In</button>
+            </fieldset>
+        </div>
+        <div class="mx-auto text-center">
+            <div class="flex items-center text-xl font-semibold py-4 w-full">
+                <hr class="grow border-gray-300">
+                <span class="px-4 text-gray-500">OR</span>
+                <hr class="grow border-gray-300">
+            </div>
+            <p class="text-neutral/50 pb-2">Demo Credentials:</p>
+            <div class="demo-box bg-[#F8FAFC] px-22 py-5 mb-5 rounded-md">
+                <p><strong>Username:</strong> admin</p>
+                <p><strong>Password:</strong> admin123</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="./app.js"></script>
 </body>
 </html>
+

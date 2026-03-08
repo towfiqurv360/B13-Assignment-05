@@ -14,7 +14,7 @@ SignIn.addEventListener('click', (event) =>{
     }
     else{
         alert("Login SuccessFull!")
-        return window.location.href = 'index.html';
+        return window.location.href = 'dashboard.html';
     } 
     
 });
