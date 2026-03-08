@@ -12,6 +12,9 @@ const loadAllIssues = async ()=>{
     const Cards = document.getElementById('card');
     Cards.innerHTML="";
 
+        const issueCountElement = document.getElementById('issue-count');
+        issueCountElement.innerText = `${issues.length} Issues`;
+
     issues.forEach(issue => {
         console.log(issue);
         let BorderColor="";
@@ -24,10 +27,29 @@ const loadAllIssues = async ()=>{
             BorderColor=  "border-t-4 border-purple-500 rounded-t-lg";
             statusIcon = "Closed-Status.png"
         }
+
+        let priorityBG = "";
+        let priorityText = "";
+
+        if(issue.priority === 'high'){
+            priorityBg = "bg-red-100";
+            priorityText = "text-red-500";
+        }
+        else if(issue.priority==='medium'){
+            priorityBg = "bg-yellow-100";
+            priorityText = "text-yellow-600";
+
+        }
+
+        else{
+            priorityBg = "bg-gray-200";
+            priorityText = "text-neutral/50";
+        }
+
         const cardStyle=`<div class="card bg-white shadow-lg ${BorderColor}">
                 <div class="flex justify-between items-center px-4 pt-4">                
                         <img src="./assets/${statusIcon}" alt="">
-                        <a href="" class="btn btn-sm btn-soft btn-error rounded-full">${issue.status}</a>
+                        <a href="" class="btn btn-xs rounded-full border-none font-bold ${priorityBg} ${priorityText}">${issue.priority}</a>
                 </div>
                 <div class="px-4 pt-4">
                     <h2 class="text-base font-semibold">${issue.title}</h2>
@@ -65,14 +87,23 @@ const Allbtn=document.getElementById('btn-all');
 const Openbtn=document.getElementById('btn-open');
 const Closebtn=document.getElementById('btn-closed');
 
+const setActiveButton = (activeBtn) =>{
+    Allbtn.classList.remove('bg-purple-600', 'text-white');
+    Openbtn.classList.remove('bg-purple-600', 'text-white');
+    Closebtn.classList.remove('bg-purple-600', 'text-white');
+
+    activeBtn.classList.add('bg-purple-600', 'text-white');
+};
+
 Allbtn.addEventListener('click', (event) => {
     event.preventDefault();
     displayIssues(allIssuesData);
+    setActiveButton(Allbtn);
 });
 
 Openbtn.addEventListener('click', (event)=>{
     event.preventDefault();
-
+    setActiveButton(Openbtn);
     const openIssues = allIssuesData.filter(issue => issue.status=== "open");
     displayIssues(openIssues);
 });
@@ -82,4 +113,7 @@ Closebtn.addEventListener('click', (event)=>{
     const closeIssues = allIssuesData.filter(issue=> issue.status ==="closed");
 
     displayIssues(closeIssues);
+    setActiveButton(Closebtn);
 });
+setActiveButton(Allbtn);
+
